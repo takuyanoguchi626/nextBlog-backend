@@ -1,3 +1,5 @@
 const router = require("express").Router();
 
-router.get("/:id", (req, res, next) => {});
+router.use("/articleDetail", require("./articleDetail.js"));
+
+module.exports = router;
