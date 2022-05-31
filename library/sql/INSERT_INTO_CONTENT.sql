@@ -1,9 +1,4 @@
 INSERT INTO 
-content("contentTitle","contentImg","contentBody","articleId")
+content(`contentTitle`,`contentImg`,`contentBody`,`orderNumber`,`articleId`)
 VALUES
-(?,?,?,(
-    SELECT
-last_insert_id()
-    FROM
-    article
-))
+(?,?,?,?,(SELECT LAST_INSERT_ID()));
