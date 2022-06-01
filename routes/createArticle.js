@@ -1,9 +1,10 @@
 const router = require("express").Router();
 const { sql } = require("../library/client.js");
 const transaction = require("../library/transaction.js");
+const { format } = require("date-fns");
 
 router.post("/", async (req, res) => {
-  const nowDate = new Date();
+  const formatDate = format(new Date(), "yyyy/MM/dd");
   const body = req.body;
   console.log(req.body);
   let connection;
@@ -13,7 +14,7 @@ router.post("/", async (req, res) => {
     const result = await transaction.executeQuery(
       connection,
       await sql("INSERT_INTO_ARTICLE"),
-      [body.title, body.summary, body.imgPath, nowDate]
+      [body.title, body.summary, body.imgPath, formatDate]
     );
     console.log(result);
     for (const content of body.body) {
