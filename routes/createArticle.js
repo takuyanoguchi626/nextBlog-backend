@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const { mysqlTool, sql } = require("../library/client.js");
+const { sql } = require("../library/client.js");
 const transaction = require("../library/transaction.js");
 
-router.post("/", async (req, res, next) => {
+router.post("/", async (req, res) => {
   const nowDate = new Date();
   const body = req.body;
   console.log(req.body);
@@ -29,21 +29,25 @@ router.post("/", async (req, res, next) => {
     console.log(resultContent);
     await transaction.commit(connection);
     res.json({
-      message: "成功しました。",
+      status: success,
+      message: "記事の投稿に成功しました。",
     });
   } catch (error) {
     console.log("errorに来ました");
-    // console.log(connection);
-    await transaction.rollback(connection, error).catch(() => {
-      console.log("rollback");
+    await transaction.rollback(connection, error);
+    res.json({
+      status: error,
+      message: "記事の投稿に失敗しました。",
     });
-    next(error);
   } finally {
     connection.release();
   }
 });
 
 router.get("/", (req, res) => {
+  try {
+    throw new Error();
+  } catch (error) {}
   res.json({
     message: "Getで呼ばれました",
   });

@@ -33,7 +33,7 @@ const commit = async (connection) => {
 const rollback = async (connection, err) => {
   return new Promise((resolve, reject) => {
     connection.rollback(() => {
-      reject(err);
+      resolve(err);
     });
   });
 };
