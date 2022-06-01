@@ -1,6 +1,6 @@
 SELECT
 *
 FROM
-article
+content
 WHERE
-id=?
+articleId=?
