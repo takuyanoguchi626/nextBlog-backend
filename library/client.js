@@ -14,6 +14,7 @@ const pool = mysql2.createPool({
 const { sql } = require("@garafu/mysql-fileloader")({
   root: path.join(__dirname, "./sql"),
 });
+const getConnection = util.promisify(pool.getConnection).bind(pool);
 const executeQuery = util.promisify(pool.query).bind(pool);
 const mysqlTool = async (query, values) => {
   const results = await executeQuery(query, values);
@@ -23,4 +24,5 @@ const mysqlTool = async (query, values) => {
 module.exports = {
   mysqlTool,
   sql,
+  getConnection,
 };
