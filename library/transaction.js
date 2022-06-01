@@ -30,10 +30,10 @@ const commit = async (connection) => {
   });
 };
 
-const rollback = async (connection, err) => {
+const rollback = async (connection) => {
   return new Promise((resolve, reject) => {
     connection.rollback(() => {
-      resolve(err);
+      resolve();
     });
   });
 };

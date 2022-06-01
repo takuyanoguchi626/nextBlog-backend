@@ -10,33 +10,36 @@ router.post("/", async (req, res) => {
 
   try {
     connection = await transaction.beginTransaction();
-    const resultArticle = await transaction.executeQuery(
+    const result = await transaction.executeQuery(
       connection,
       await sql("INSERT_INTO_ARTICLE"),
       [body.title, body.summary, body.imgPath, nowDate]
     );
-    const resultContent = await transaction.executeQuery(
-      connection,
-      await sql("INSERT_INTO_CONTENT"),
-      [
-        body.body.contentTitle,
-        body.body.contentImg,
-        body.body.contentBody,
-        body.body.orderNumber,
-      ]
-    );
-    console.log(resultArticle);
-    console.log(resultContent);
+    console.log(result);
+    for (const content of body.body) {
+      await transaction.executeQuery(
+        connection,
+        await sql("INSERT_INTO_CONTENT"),
+        [
+          content.contentTitle,
+          content.contentImg,
+          content.contentBody,
+          content.orderNumber,
+          result.insertId,
+        ]
+      );
+    }
     await transaction.commit(connection);
     res.json({
-      status: success,
+      status: "success",
       message: "記事の投稿に成功しました。",
     });
   } catch (error) {
     console.log("errorに来ました");
-    await transaction.rollback(connection, error);
+    console.log(error);
+    await transaction.rollback(connection);
     res.json({
-      status: error,
+      status: "error",
       message: "記事の投稿に失敗しました。",
     });
   } finally {
