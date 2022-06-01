@@ -58,9 +58,17 @@ router.post("/", async (req, res) => {
       }
     }
     await transaction.commit(connection);
+    res.json({
+      status: "success",
+      message: "記事の編集に成功しました。",
+    });
   } catch (error) {
     await transaction.rollback(connection);
     console.log(error);
+    res.json({
+      status: "success",
+      message: "記事の編集に失敗しました。",
+    });
   } finally {
     connection.release();
   }
