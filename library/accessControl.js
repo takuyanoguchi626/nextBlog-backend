@@ -2,6 +2,10 @@ const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
 const { mysqlTool, sql } = require("./client.js");
 
+let initialize;
+let authenticate;
+let authorize;
+
 passport.serializeUser((user, done) => {
   done(null, user);
 });
@@ -21,7 +25,7 @@ passport.use(
     async (req, email, password, done) => {
       let results, user;
       try {
-        results = await mysqlTool(await sql(""), [email]);
+        results = await mysqlTool(await sql("SELECT_USER_BY_EMAIL"), [email]);
       } catch (error) {
         return done(error);
       }
@@ -46,3 +50,30 @@ passport.use(
     }
   )
 );
+
+initialize = function () {
+  return [
+    passport.initialize(),
+    passport.session(),
+    function (req, res, next) {
+      console.log(req.user);
+      if (req.user) {
+        res.locals.user = req.user;
+      }
+      next();
+    },
+  ];
+};
+
+authenticate = () => {
+  return passport.authenticate("localStrategy", {
+    successRedirect: "/user/success",
+    failureRedirect: "/user/failure",
+  });
+};
+
+module.exports = {
+  initialize,
+  authenticate,
+  authorize,
+};
