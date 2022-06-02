@@ -8,6 +8,7 @@ app.use(express.json()); // application/json
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/article", require("./routes/article.js"));
+app.use("/user", require("./routes/user.js"));
 
 app.listen(port, () => {
   console.log(`appが起動しました。localhost:${port}`);
