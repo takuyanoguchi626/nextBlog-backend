@@ -1,0 +1,9 @@
+UPDATE
+article
+SET
+ title=?,
+ summary=?,
+ imgPath=?,
+ updatedAt=?
+WHERE
+id=?
