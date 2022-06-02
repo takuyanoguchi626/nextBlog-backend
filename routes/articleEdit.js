@@ -3,7 +3,7 @@ const { sql } = require("../library/client.js");
 const transaction = require("../library/transaction.js");
 const { format } = require("date-fns");
 
-router.post("/", async (req, res) => {
+router.patch("/", async (req, res) => {
   const formatDate = format(new Date(), "yyyy/MM/dd");
   const body = req.body;
   const contentCount = body.body.length;
