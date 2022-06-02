@@ -18,11 +18,13 @@ passport.use(
   "localStrategy",
   new localStrategy(
     {
-      usernameField: "email",
+      usernameField: "username",
       passwordField: "password",
       passReqToCallback: true,
     },
     async (req, email, password, done) => {
+      console.log(email);
+      console.log(password);
       let results, user;
       try {
         results = await mysqlTool(await sql("SELECT_USER_BY_EMAIL"), [email]);
@@ -67,8 +69,8 @@ initialize = function () {
 
 authenticate = () => {
   return passport.authenticate("localStrategy", {
-    successRedirect: "/user/success",
-    failureRedirect: "/user/failure",
+    successRedirect: "/user/login/success",
+    failureRedirect: "/user/login/failure",
   });
 };
 
