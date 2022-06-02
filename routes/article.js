@@ -6,4 +6,6 @@ router.use("/createArticle", require("./createArticle.js"));
 
 router.use("/articleList", require("./articleList.js"));
 
+router.use("/articleDelete", require("./articleDelete.js"));
+
 module.exports = router;
