@@ -1,6 +1,7 @@
 const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
 const { mysqlTool, sql } = require("./client.js");
+const bcrypt = require("bcrypt");
 
 let initialize;
 let authenticate;
@@ -18,7 +19,7 @@ passport.use(
   "localStrategy",
   new localStrategy(
     {
-      usernameField: "username",
+      usernameField: "email",
       passwordField: "password",
       passReqToCallback: true,
     },
@@ -31,6 +32,7 @@ passport.use(
       } catch (error) {
         return done(error);
       }
+      console.log(results);
       if (
         results.length === 1 &&
         bcrypt.compareSync(password, results[0].password)
@@ -39,32 +41,20 @@ passport.use(
           id: results[0].id,
           name: results[0].name,
           email: results[0].email,
-          permissions: [normal],
+          permissions: ["normal"],
         };
+        console.log(user);
+        req.body.user = user;
         done(null, user);
       } else {
-        done(
-          null,
-          false,
-          req.flash("message", "ユーザー名 または パスワードが間違っています")
-        );
+        done(null, false);
       }
     }
   )
 );
 
 initialize = function () {
-  return [
-    passport.initialize(),
-    passport.session(),
-    function (req, res, next) {
-      console.log(req.user);
-      if (req.user) {
-        res.locals.user = req.user;
-      }
-      next();
-    },
-  ];
+  return [passport.initialize(), passport.session()];
 };
 
 authenticate = () => {
