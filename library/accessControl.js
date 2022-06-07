@@ -59,7 +59,6 @@ initialize = function () {
 
 authenticate = () => {
   return passport.authenticate("localStrategy", {
-    successRedirect: "/user/login/success",
     failureRedirect: "/user/login/failure",
   });
 };
