@@ -16,15 +16,18 @@ router.post("/", async (req, res) => {
       await sql("SELECT_USER_BY_EMAIL"),
       [email]
     );
-    console.log(user.length);
+    console.log("length" + user.length);
     if (user.length === 0) {
-      const hash_pass = bcrypt.hashSync(password, 10);
-      console.log("hash" + hash_pass);
-      await transaction.executeQuery(connection, await sql("INSERT_USER"), [
-        name,
-        email,
-        hash_pass,
-      ]);
+      bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(password, salt, async function (err, hash) {
+          console.log("hhhhhhh" + hash);
+          await transaction.executeQuery(connection, await sql("INSERT_USER"), [
+            name,
+            email,
+            hash,
+          ]);
+        });
+      });
       await transaction.commit(connection);
       res.json({
         message: "成功した。",
